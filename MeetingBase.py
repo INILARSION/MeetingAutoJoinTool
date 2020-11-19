@@ -10,6 +10,11 @@ from selenium.webdriver.chrome.options import Options
 class MeetingAutomation():
 
     def __init__(self, url):
+        self.url = url
+        self.driver = None
+        self.record_process = None
+
+    def _open_url(self):
         opt = Options()
         opt.add_argument("--disable-infobars")
         opt.add_argument("start-maximized")
@@ -20,10 +25,6 @@ class MeetingAutomation():
             "profile.default_content_setting_values.notifications": 1
         })
         self.driver = webdriver.Chrome(options=opt)
-        self.url = url
-        self.record_process = None
-
-    def _open_url(self):
         self.driver.get(self.url)
         self.driver.maximize_window()
 
