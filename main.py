@@ -100,7 +100,7 @@ class MeetingAutomation:
         self.driver.close()
 
     def start_recording(self):
-        self.record_process = subprocess.Popen(["obs", "--startrecording"], stdout=subprocess.PIPE)
+        self.record_process = subprocess.Popen(["obs", "--startrecording", "--minimize-to-tray"], stdout=subprocess.PIPE)
 
     def _set_credentials(self):
         if not (self.name_input is None or self.email_input is None):
@@ -136,11 +136,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Automatically enter and record meeting')
     parser.add_argument('-u', type=str, help='Url to meeting')
     parser.add_argument('-n', type=str, help='Name to display')
-    parser.add_argument('-d', type=str, help='Meeting duration')
+    parser.add_argument('-d', type=int, help='Meeting duration in minutes')
     parser.add_argument('-s', type=str, nargs="?", help='Schedule Time/Date DDMMYYYYHHMM')
     parser.add_argument('-e', type=str, nargs="?", help='Email to display')
-    parser.add_argument('-r', type=str, action='store_true', help='Flag to start recording')
-    parser.add_argument('-i', type=str, action='store_true', help='Set flag if link leads to meeting invite page')
+    parser.add_argument('-r', action='store_true', help='Flag to start recording')
+    parser.add_argument('-i', action='store_true', help='Set flag if link leads to meeting invite page')
 
     args = parser.parse_args()
 
