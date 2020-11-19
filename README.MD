@@ -1,6 +1,6 @@
-# Webex automatic join tool
+# Automatic join tool for multiple meeting platforms
 
-This Python-Script can be used to join Webex meetings automatically on linux. 
+This Python-Script can be used to join Webex and Zoom meetings automatically on linux. 
 Meetings can be automatically recorded with OBS and the join time/date can be scheduled.
 
 ## Usage

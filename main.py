@@ -2,8 +2,8 @@
 import argparse
 import datetime
 import time
-
 from Webex import WebexAutomation
+
 
 def sleep_till_schedule(due_date):
     due_date = datetime.datetime(int(due_date[4:8]), int(due_date[2:4]), int(due_date[0:2]), int(due_date[8:10]), int(due_date[10:12]))
@@ -34,6 +34,7 @@ def config_meeting(args):
 
     meeting.wait_for_session_duration(args.d)
     meeting.end_meeting()
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Automatically enter and record meeting')
