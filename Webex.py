@@ -2,34 +2,18 @@ import os
 import signal
 import time
 import subprocess
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from MeetingBase import MeetingAutomation
 
 
 class WebexAutomation(MeetingAutomation):
-    def __init__(self, url, name="test", email="test@test.com"):
-        super().__init__()
-        opt = Options()
-        opt.add_argument("--disable-infobars")
-        opt.add_argument("start-maximized")
-        opt.add_experimental_option("prefs", {
-            "profile.default_content_setting_values.media_stream_mic": 1,
-            "profile.default_content_setting_values.media_stream_camera": 1,
-            "profile.default_content_setting_values.geolocation": 1,
-            "profile.default_content_setting_values.notifications": 1
-        })
-        self.driver = webdriver.Chrome(options=opt)
-        self.url = url
+    def __init__(self, url, name="test", email="test@test.com", is_meeting_invite=True):
+        super().__init__(url)
         self.name = name
         self.email = email
         self.name_input = None
         self.email_input = None
         self.connect_button = None
-
-    def _open_url(self):
-        self.driver.get(self.url)
-        self.driver.maximize_window()
+        self.is_meeting_invite = is_meeting_invite
 
     def _goto_meeting(self):
         # wait for page to load fully
@@ -102,13 +86,9 @@ class WebexAutomation(MeetingAutomation):
         self.wait_for_session_duration(duration if duration else 2)
         os.kill(self.record_process.pid, signal.SIGKILL)
 
-    def start_meeting(self, is_meeting_invite):
+    def start_meeting(self):
         self._open_url()
-        if is_meeting_invite:
+        if self.is_meeting_invite:
             self._goto_meeting()
         self._get_elements_login()
         self._login()
-
-    def end_meeting(self):
-        self.stop_recording()
-        self.driver.close()

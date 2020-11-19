@@ -3,6 +3,7 @@ import argparse
 import datetime
 import time
 from Webex import WebexAutomation
+from Zoom import ZoomAutomation
 
 
 def sleep_till_schedule(due_date):
@@ -25,9 +26,16 @@ def config_meeting(args):
         sleep_till_schedule(args.s)
 
     email = "" if args.e is None else args.e
-    meeting = WebexAutomation(args.u, args.n, email)
 
-    meeting.start_meeting(args.i)
+    if "webex.com" in args.u:
+        meeting = WebexAutomation(args.u, args.n, email, args.i)
+    elif "zoom.us" in args.u:
+        meeting = ZoomAutomation(args.u)
+    else:
+        print("Meeting platform not supported")
+        raise Exception
+
+    meeting.start_meeting()
 
     if args.r:
         meeting.start_recording()

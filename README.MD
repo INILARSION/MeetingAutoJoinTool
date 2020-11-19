@@ -41,6 +41,17 @@ Things that have to be installed:
 - Python 3
 - Selenium for python
 
+**Requirements for Zoom**
+
+This only works when zoom is installed locally.
+
+These settings are needed:
+
+In Zoom: Auto join meeting with audio (and maybe join mute)
+
+in Browser: Always allow zoom.us to open links of this type (appears when joining manually)
+
+
 ## DISCLAIMER
 There is no warranty for this software and the usage of it and its features is on your own risk.
 
