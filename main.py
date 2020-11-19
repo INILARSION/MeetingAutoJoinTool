@@ -41,7 +41,7 @@ def config_meeting(args):
         meeting.start_recording()
 
     meeting.wait_for_session_duration(args.d)
-    meeting.end_meeting()
+    meeting.end_meeting(args.h)
 
 
 if __name__ == '__main__':
@@ -52,6 +52,7 @@ if __name__ == '__main__':
     parser.add_argument('-s', type=str, nargs="?", help='Schedule Time/Date DDMMYYYYHHMM')
     parser.add_argument('-e', type=str, nargs="?", help='Email to display')
     parser.add_argument('-r', action='store_true', help='Flag to start recording')
+    parser.add_argument('-h', action='store_true', help='Flag if hotkeys are being used in OBS')
     parser.add_argument('-i', action='store_true', help='Set flag if link leads to meeting invite page')
     parser.add_argument('--dry', action='store_true',
                         help='Dry run: Webex test website will open so you can configure OBS. Default duration 2 minutes')

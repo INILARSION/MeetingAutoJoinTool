@@ -20,6 +20,8 @@ Meetings can be automatically recorded with OBS and the join time/date can be sc
 
 -i: Set flag if link leads to meeting invite page
 
+-h: Flag if hotkeys are being used in OBS (ctrl alt s for stopping recording)
+
 --dry: Dry run: Webex test website will open so you can configure OBS. Default duration 2 minutes
 
 **Example:**
@@ -31,6 +33,8 @@ Meetings can be automatically recorded with OBS and the join time/date can be sc
 To use the recording feature, OBS has to be installed.
 Use the script with only the --dry flag to open a Window and OBS. 
 In OBS you can now select if the chromium Window or the whole screen should be used.
+Use the -h flag and set ctrl alt s for stopping recording as hotkey in OBS. 
+It works without if you use .mkv but .mp4 has problems without. 
 
 **Dependencies**
 

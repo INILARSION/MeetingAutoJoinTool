@@ -2,6 +2,7 @@ import os
 import signal
 import subprocess
 import time
+import pyautogui
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -34,10 +35,14 @@ class MeetingAutomation():
         self.record_process = subprocess.Popen(["obs", "--startrecording", "--minimize-to-tray", "--multi"],
                                                stdout=subprocess.PIPE)
 
-    def stop_recording(self):
-        if self.record_process:
-            os.kill(self.record_process.pid, signal.SIGKILL)
+    def stop_recording(self, is_hotkeys_used):
+        if not self.record_process:
+            return
+        if is_hotkeys_used:
+            pyautogui.hotkey('ctrl', 'alt', 's')
+            time.sleep(2)
+        os.kill(self.record_process.pid, signal.SIGKILL)
 
-    def end_meeting(self):
-        self.stop_recording()
+    def end_meeting(self, is_hotkeys_used):
+        self.stop_recording(is_hotkeys_used)
         self.driver.close()
