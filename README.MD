@@ -1,6 +1,6 @@
 # Automatic join tool for multiple meeting platforms
 
-This Python-Script can be used to join Webex and Zoom meetings automatically on linux. 
+This Python-Script can be used to join Webex, Zoom and BigBlueButton meetings automatically on linux. 
 Meetings can be automatically recorded with OBS and the join time/date can be scheduled.
 
 ## Usage
@@ -20,7 +20,7 @@ Meetings can be automatically recorded with OBS and the join time/date can be sc
 
 -i: Set flag if link leads to meeting invite page
 
--h: Flag if hotkeys are being used in OBS (ctrl alt s for stopping recording)
+-o: Flag if hotkeys are being used in OBS (ctrl alt s for stopping recording)
 
 --dry: Dry run: Webex test website will open so you can configure OBS. Default duration 2 minutes
 
@@ -44,6 +44,7 @@ Things that have to be installed:
 - chromium-chromedriver
 - Python 3
 - Selenium for python
+- Pyautogui
 
 **Requirements for Zoom**
 
