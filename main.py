@@ -126,11 +126,11 @@ class MeetingAutomation:
 
 
 def sleep_till_schedule(due_date):
-    due_date = datetime.datetime(int(due_date[4:8]), int(due_date[2:4]), int(due_date[0:2]))
+    due_date = datetime.datetime(int(due_date[4:8]), int(due_date[2:4]), int(due_date[0:2]), int(due_date[8:10]), int(due_date[10:12]))
     while True:
         now = datetime.datetime.now()
         diff_date = due_date - now
-        if diff_date.hours == 0:
+        if diff_date.days == 0:
             # less than a day to sleep
             break
         else:
