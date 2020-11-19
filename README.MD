@@ -27,11 +27,13 @@ Meetings can be automatically recorded with OBS and the join time/date can be sc
 `./main.py -n "Your Name" -e Your@email.com  -d 90 -r -u "https://www.webex.com/de/test-meeting.html"`
 
 **Configuration for OBS**
+
 To use the recording feature, OBS has to be installed.
 Use the script with only the --dry flag to open a Window and OBS. 
 In OBS you can now select if the chromium Window or the whole screen should be used.
 
 **Dependencies**
+
 Things that have to be installed:
 
 - Open Broadcaster Software®
