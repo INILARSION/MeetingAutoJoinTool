@@ -157,16 +157,3 @@ if __name__ == '__main__':
 
     meeting.wait_for_session_duration(args.d)
     meeting.end_meeting()
-
-
-
-    #meeting = MeetingAutomation("https://www.webex.com/de/test-meeting.html", "test", "test@test.com")
-    #meeting = MeetingAutomation("https://fu-berlin.webex.com/webappng/sites/fu-berlin/meeting/download/56b2fd2b045ea3a55517afc9c5efc4e3", "test", "test@test.com")
-    #meeting = MeetingAutomation("https://h-brs.webex.com/h-brs/j.php?MTID=m498e6a88dd7f97e8a9ebe2014ab89313", "Torsten", "")
-    #meeting.start_recording()
-    #meeting._open_url()
-    #meeting._goto_meeting()
-    #meeting._get_elements_login()
-    #meeting._login()
-    #meeting.wait_for_session_duration(0.5)
-    #meeting.end_meeting()
