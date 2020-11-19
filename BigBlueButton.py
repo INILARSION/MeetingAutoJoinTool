@@ -1,4 +1,8 @@
 import time
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
 from MeetingBase import MeetingAutomation
 
 
@@ -48,6 +52,19 @@ class BigBlueButtonAutomation(MeetingAutomation):
         time.sleep(10)
         self._set_sound()
 
+    def _set_driver(self):
+        opt = Options()
+        opt.add_argument("--disable-infobars")
+        opt.add_argument("start-maximized")
+        opt.add_experimental_option("prefs", {
+            "profile.default_content_setting_values.media_stream_mic": 1,
+            "profile.default_content_setting_values.media_stream_camera": 1,
+            "profile.default_content_setting_values.geolocation": 1,
+            "profile.default_content_setting_values.notifications": 1
+        })
+        self.driver = webdriver.Chrome(options=opt)
+
     def start_meeting(self):
+        self._set_driver()
         self._open_url()
         self._enter_meeting()

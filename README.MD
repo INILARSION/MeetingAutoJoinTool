@@ -1,6 +1,6 @@
 # Automatic join tool for multiple meeting platforms
 
-This Python-Script can be used to join Webex, Zoom and BigBlueButton meetings automatically on linux. 
+This Python-Script can be used to join Webex, Zoom, Jitsi and BigBlueButton meetings automatically on linux. 
 Meetings can be automatically recorded with OBS and the join time/date can be scheduled.
 
 ## Usage

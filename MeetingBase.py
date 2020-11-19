@@ -2,9 +2,8 @@ import os
 import signal
 import subprocess
 import time
+
 import pyautogui
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 
 
 class MeetingAutomation():
@@ -15,16 +14,6 @@ class MeetingAutomation():
         self.record_process = None
 
     def _open_url(self):
-        opt = Options()
-        opt.add_argument("--disable-infobars")
-        opt.add_argument("start-maximized")
-        opt.add_experimental_option("prefs", {
-            "profile.default_content_setting_values.media_stream_mic": 1,
-            "profile.default_content_setting_values.media_stream_camera": 1,
-            "profile.default_content_setting_values.geolocation": 1,
-            "profile.default_content_setting_values.notifications": 1
-        })
-        self.driver = webdriver.Chrome(options=opt)
         self.driver.get(self.url)
         self.driver.maximize_window()
 
@@ -40,7 +29,7 @@ class MeetingAutomation():
         if not self.record_process:
             return
         if is_hotkeys_used:
-            pyautogui.hotkey('ctrl', 'alt', 's')
+            pyautogui.hotkey('ctrl', 'alt', 's') # TODO choose better key and argparse
             time.sleep(2)
         os.kill(self.record_process.pid, signal.SIGKILL)
 

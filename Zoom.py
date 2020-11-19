@@ -1,9 +1,10 @@
 import os
+import shutil
 import signal
 import subprocess
 import time
+
 from MeetingBase import MeetingAutomation
-import shutil
 
 
 class ZoomAutomation(MeetingAutomation):
@@ -24,7 +25,7 @@ class ZoomAutomation(MeetingAutomation):
             print("Run 'snap install zoom' or 'sudo apt install zoom'")
             raise Exception
         self.zoom_process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-        time.sleep(1)
+        time.sleep(25)
 
     def end_meeting(self, is_hotkeys_used):
         self.stop_recording(is_hotkeys_used)

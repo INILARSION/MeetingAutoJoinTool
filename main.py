@@ -2,13 +2,16 @@
 import argparse
 import datetime
 import time
+
 from BigBlueButton import BigBlueButtonAutomation
+from Jitsi import JitsiAutomation
 from Webex import WebexAutomation
 from Zoom import ZoomAutomation
 
 
 def sleep_till_schedule(due_date):
-    due_date = datetime.datetime(int(due_date[4:8]), int(due_date[2:4]), int(due_date[0:2]), int(due_date[8:10]), int(due_date[10:12]))
+    due_date = datetime.datetime(int(due_date[4:8]), int(due_date[2:4]), int(due_date[0:2]), int(due_date[8:10]),
+                                 int(due_date[10:12]))
     while True:
         now = datetime.datetime.now()
         diff_date = due_date - now
@@ -35,6 +38,8 @@ def config_meeting(args):
         meeting = ZoomAutomation(args.u)
     elif "bbb.fslab.de" in args.u:
         meeting = BigBlueButtonAutomation(args.u, name)
+    elif "meet." in args.u:
+        meeting = JitsiAutomation(args.u, name)
     else:
         print("Meeting platform not supported")
         raise Exception
