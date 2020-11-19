@@ -1,3 +1,4 @@
+#!/usr/local/bin/python3
 import argparse
 import datetime
 import os
@@ -37,6 +38,13 @@ class MeetingAutomation:
         time.sleep(1)
         self.driver.find_element_by_id("smartJoinButton").click()
 
+    def _set_credentials(self):
+        if not (self.name_input is None or self.email_input is None):
+            self.name_input.clear()
+            self.name_input.send_keys(self.name)
+            self.email_input.clear()
+            self.email_input.send_keys(self.email)
+
     def _get_elements_login(self):
         # sometimes there is an iframe, sometimes not
         if self.driver.find_elements_by_id("pbui_iframe"):
@@ -60,10 +68,6 @@ class MeetingAutomation:
             self.connect_button = self.driver.find_element_by_class_name('tm-btn')
         else:
             self.connect_button = self.driver.find_element_by_id('guest_next-btn')
-
-    @staticmethod
-    def wait_for_session_duration(minutes):
-        time.sleep(minutes * 60)
 
     def _login(self):
         self.connect_button.click()
@@ -94,20 +98,11 @@ class MeetingAutomation:
         # join meeting
         self.driver.find_element_by_id("interstitial_join_btn").click()
 
-    def end_meeting(self):
-        if self.record_process:
-            os.kill(self.record_process.pid, signal.SIGKILL)
-        self.driver.close()
-
-    def start_recording(self):
-        self.record_process = subprocess.Popen(["obs", "--startrecording", "--minimize-to-tray"], stdout=subprocess.PIPE)
-
-    def _set_credentials(self):
-        if not (self.name_input is None or self.email_input is None):
-            self.name_input.clear()
-            self.name_input.send_keys(self.name)
-            self.email_input.clear()
-            self.email_input.send_keys(self.email)
+    def dry_run(self, duration):
+        self._open_url()
+        self.record_process = subprocess.Popen(["obs", "--multi"], stdout=subprocess.PIPE)
+        self.wait_for_session_duration(duration if duration else 2)
+        os.kill(self.record_process.pid, signal.SIGKILL)
 
     def start_meeting(self, is_meeting_invite):
         self._open_url()
@@ -115,6 +110,19 @@ class MeetingAutomation:
             self._goto_meeting()
         self._get_elements_login()
         self._login()
+
+    def end_meeting(self):
+        if self.record_process:
+            os.kill(self.record_process.pid, signal.SIGKILL)
+        self.driver.close()
+
+    def start_recording(self):
+        self.record_process = subprocess.Popen(["obs", "--startrecording", "--minimize-to-tray", "--multi"],
+                                               stdout=subprocess.PIPE)
+
+    @staticmethod
+    def wait_for_session_duration(minutes):
+        time.sleep(minutes * 60)
 
 
 def sleep_till_schedule(due_date):
@@ -132,18 +140,7 @@ def sleep_till_schedule(due_date):
     time.sleep(diff_date.seconds)
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Automatically enter and record meeting')
-    parser.add_argument('-u', type=str, help='Url to meeting')
-    parser.add_argument('-n', type=str, help='Name to display')
-    parser.add_argument('-d', type=int, help='Meeting duration in minutes')
-    parser.add_argument('-s', type=str, nargs="?", help='Schedule Time/Date DDMMYYYYHHMM')
-    parser.add_argument('-e', type=str, nargs="?", help='Email to display')
-    parser.add_argument('-r', action='store_true', help='Flag to start recording')
-    parser.add_argument('-i', action='store_true', help='Set flag if link leads to meeting invite page')
-
-    args = parser.parse_args()
-
+def config_meeting(args):
     if args.s:
         sleep_till_schedule(args.s)
 
@@ -157,3 +154,24 @@ if __name__ == '__main__':
 
     meeting.wait_for_session_duration(args.d)
     meeting.end_meeting()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Automatically enter and record meeting')
+    parser.add_argument('-u', type=str, help='Url to meeting')
+    parser.add_argument('-n', type=str, help='Name to display')
+    parser.add_argument('-d', type=int, help='Meeting duration in minutes')
+    parser.add_argument('-s', type=str, nargs="?", help='Schedule Time/Date DDMMYYYYHHMM')
+    parser.add_argument('-e', type=str, nargs="?", help='Email to display')
+    parser.add_argument('-r', action='store_true', help='Flag to start recording')
+    parser.add_argument('-i', action='store_true', help='Set flag if link leads to meeting invite page')
+    parser.add_argument('--dry', action='store_true',
+                        help='Dry run: Webex test website will open so you can configure OBS. Default duration 2 minutes')
+
+    args = parser.parse_args()
+
+    if args.dry:
+        meeting = MeetingAutomation("https://www.webex.com/de/test-meeting.html")
+        meeting.dry_run(args.d)
+    else:
+        config_meeting(args)
