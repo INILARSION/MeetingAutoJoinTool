@@ -3,25 +3,49 @@ import signal
 import subprocess
 import time
 
-from MeetingBase import MeetingAutomation
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
+
+from MeetingBase import MeetingAutomation
 
 
 class WebexAutomation(MeetingAutomation):
-    def __init__(self, url, name="test", email="test@test.com", is_meeting_invite=True):
+    def __init__(self, url, name="test", email="test@test.com"):
         super().__init__(url)
         self.name = name
         self.email = email
         self.name_input = None
         self.email_input = None
         self.connect_button = None
-        self.is_meeting_invite = is_meeting_invite
 
-    def _goto_meeting(self):
-        # wait for page to load fully
-        time.sleep(1)
-        self.driver.find_element_by_id("smartJoinButton").click()
+    def start_meeting(self):
+        self._set_driver()
+        super()._open_url()
+        self._join()
+        self._login()
+
+    def dry_run(self, duration):
+        self._set_driver()
+        super()._open_url()
+        self.record_process = subprocess.Popen(["obs", "--multi"], stdout=subprocess.PIPE)
+        self.wait_for_session_duration(duration if duration else 2)
+        os.kill(self.record_process.pid, signal.SIGKILL)
+
+    def _set_driver(self):
+        opt = Options()
+        opt.add_argument("--disable-infobars")
+        opt.add_argument("start-maximized")
+        opt.add_experimental_option("prefs", {
+            "profile.default_content_setting_values.media_stream_mic": 1,
+            "profile.default_content_setting_values.media_stream_camera": 1,
+            "profile.default_content_setting_values.geolocation": 1,
+            "profile.default_content_setting_values.notifications": 1
+        })
+        self.driver = webdriver.Chrome(options=opt)
 
     def _set_credentials(self):
         if not (self.name_input is None or self.email_input is None):
@@ -30,11 +54,17 @@ class WebexAutomation(MeetingAutomation):
             self.email_input.clear()
             self.email_input.send_keys(self.email)
 
-    def _get_elements_login(self):
-        # sometimes there is an iframe, sometimes not
-        if self.driver.find_elements_by_id("pbui_iframe"):
-            # wait for page to load fully
-            time.sleep(1)
+    def _join(self):
+        wait = WebDriverWait(self.driver, 10)
+
+        try:
+            self.driver.find_element_by_id("smartJoinButton").click()
+            time.sleep(2)
+        except NoSuchElementException:
+            print('no invite / join room button, skipping')
+
+        iframe_pbui = wait.until(expected_conditions.presence_of_element_located((By.ID, 'pbui_iframe')))
+        if iframe_pbui:
             self.driver.switch_to.frame(self.driver.find_element_by_id("pbui_iframe"))
 
         if self.driver.find_elements_by_id("full-name"):
@@ -57,55 +87,29 @@ class WebexAutomation(MeetingAutomation):
     def _login(self):
         self.connect_button.click()
         # wait for page to load fully
-        time.sleep(1)
+        time.sleep(5)
         # if switched to iframe, switch back
         self.driver.switch_to.default_content()
         self.driver.switch_to.frame(self.driver.find_element_by_id("pbui_iframe"))
 
         # sometimes a field pops up, this closes it
         buttons = self.driver.find_elements_by_tag_name("button")
+        btn_allow_names = ["Alles", "All"]
         for button in buttons:
-            if "Alles" in button.get_attribute("innerHTML"):
+            if any(x in button.get_attribute("innerHTML") for x in btn_allow_names):
                 button.click()
+                time.sleep(3)
                 break
 
-        # wait for load again
-        time.sleep(1)
         # switch back from iframe
         self.driver.switch_to.default_content()
         self.driver.switch_to.frame(self.driver.find_element_by_id("pbui_iframe"))
         buttons = self.driver.find_elements_by_tag_name("button")
         # disable video and mic
+        btn_stop_video = ["Video stoppen", "Stop"]
+        btn_mute = ["Mute", "Stummschalten"]
         for button in buttons:
-            if "Video stoppen" in button.get_attribute("innerHTML") or "Stummschalten" in button.get_attribute(
-                    "innerHTML"):
+            if any(x in button.get_attribute("innerHTML") for x in (btn_mute + btn_stop_video)):
                 button.click()
         # join meeting
         self.driver.find_element_by_id("interstitial_join_btn").click()
-
-    def _set_driver(self):
-        opt = Options()
-        opt.add_argument("--disable-infobars")
-        opt.add_argument("start-maximized")
-        opt.add_experimental_option("prefs", {
-            "profile.default_content_setting_values.media_stream_mic": 1,
-            "profile.default_content_setting_values.media_stream_camera": 1,
-            "profile.default_content_setting_values.geolocation": 1,
-            "profile.default_content_setting_values.notifications": 1
-        })
-        self.driver = webdriver.Chrome(options=opt)
-
-    def dry_run(self, duration):
-        self._set_driver()
-        self._open_url()
-        self.record_process = subprocess.Popen(["obs", "--multi"], stdout=subprocess.PIPE)
-        self.wait_for_session_duration(duration if duration else 2)
-        os.kill(self.record_process.pid, signal.SIGKILL)
-
-    def start_meeting(self):
-        self._set_driver()
-        self._open_url()
-        if self.is_meeting_invite:
-            self._goto_meeting()
-        self._get_elements_login()
-        self._login()

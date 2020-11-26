@@ -33,7 +33,7 @@ def config_meeting(args):
     email = "" if args.e is None else args.e
 
     if "webex.com" in args.u:
-        meeting = WebexAutomation(args.u, name, email, args.i)
+        meeting = WebexAutomation(args.u, name, email)
     elif "zoom.us" in args.u:
         meeting = ZoomAutomation(args.u)
     elif "bbb.fslab.de" in args.u:
@@ -62,7 +62,6 @@ if __name__ == '__main__':
     parser.add_argument('-e', type=str, nargs="?", help='Email to display')
     parser.add_argument('-r', action='store_true', help='Flag to start recording')
     parser.add_argument('-o', action='store_true', help='Flag if hotkeys are being used in OBS')
-    parser.add_argument('-i', action='store_true', help='Set flag if link leads to meeting invite page')
     parser.add_argument('--dry', action='store_true',
                         help='Dry run: Webex test website will open so you can configure OBS. Default duration 2 minutes')
 
