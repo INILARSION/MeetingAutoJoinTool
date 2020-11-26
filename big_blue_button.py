@@ -3,7 +3,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from MeetingBase import MeetingAutomation
+from meeting_base import MeetingAutomation
 
 
 class BigBlueButtonAutomation(MeetingAutomation):

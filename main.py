@@ -3,10 +3,10 @@ import argparse
 import datetime
 import time
 
-from BigBlueButton import BigBlueButtonAutomation
-from Jitsi import JitsiAutomation
-from Webex import WebexAutomation
-from Zoom import ZoomAutomation
+from big_blue_button import BigBlueButtonAutomation
+from jitsi import JitsiAutomation
+from webex import WebexAutomation
+from zoom import ZoomAutomation
 
 
 def sleep_till_schedule(due_date):
@@ -63,8 +63,8 @@ if __name__ == '__main__':
     parser.add_argument('-r', action='store_true', help='Flag to start recording')
     parser.add_argument('-o', action='store_true', help='Flag if hotkeys are being used in OBS')
     parser.add_argument('--dry', action='store_true',
-                        help='Dry run: Webex test website will open so you can configure OBS. Default duration 2 minutes')
-
+                        help='Dry run: Webex test website will open so you can configure OBS. Default duration 2 '
+                             'minutes')
     args = parser.parse_args()
 
     if args.dry:

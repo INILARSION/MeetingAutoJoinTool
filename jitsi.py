@@ -1,7 +1,7 @@
-
-from MeetingBase import MeetingAutomation
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+
+from meeting_base import MeetingAutomation
 
 
 class JitsiAutomation(MeetingAutomation):

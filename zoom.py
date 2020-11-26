@@ -2,9 +2,12 @@ import os
 import shutil
 import signal
 import subprocess
+import sys
 import time
 
-from MeetingBase import MeetingAutomation
+from Xlib import display
+
+from meeting_base import MeetingAutomation
 
 
 class ZoomAutomation(MeetingAutomation):
@@ -30,4 +33,4 @@ class ZoomAutomation(MeetingAutomation):
     def end_meeting(self, is_hotkeys_used):
         super().stop_recording(is_hotkeys_used)
         os.kill(self.zoom_process.pid, signal.SIGKILL)
-        exit(0)
+        sys.exit(0)

@@ -29,7 +29,7 @@ class MeetingAutomation:
         if not self.record_process:
             return
         if is_hotkeys_used:
-            pyautogui.hotkey('ctrl', 'alt', 's') # TODO choose better key and argparse
+            pyautogui.hotkey('ctrl', 'alt', 's')  # TODO choose better key and argparse
             time.sleep(2)
         os.kill(self.record_process.pid, signal.SIGKILL)
 
