@@ -66,5 +66,5 @@ class BigBlueButtonAutomation(MeetingAutomation):
 
     def start_meeting(self):
         self._set_driver()
-        self._open_url()
+        super()._open_url()
         self._enter_meeting()

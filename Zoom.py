@@ -28,6 +28,6 @@ class ZoomAutomation(MeetingAutomation):
         time.sleep(25)
 
     def end_meeting(self, is_hotkeys_used):
-        self.stop_recording(is_hotkeys_used)
+        super().stop_recording(is_hotkeys_used)
         os.kill(self.zoom_process.pid, signal.SIGKILL)
         exit(0)

@@ -6,7 +6,7 @@ import time
 import pyautogui
 
 
-class MeetingAutomation():
+class MeetingAutomation:
 
     def __init__(self, url):
         self.url = url
